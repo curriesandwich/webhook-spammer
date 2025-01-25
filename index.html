@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook Spammer (For Testing)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Webhook Spammer (Testing Only)</h1>
+  <p>Use this tool responsibly for educational purposes.</p>
+
+  <input type="text" id="webhookUrl" placeholder="Webhook URL" style="width: 80%;" />
+  <input type="text" id="message" placeholder="Message to send" style="width: 80%;" />
+  <input type="number" id="times" placeholder="Number of requests" min="1" value="10" />
+  <button id="startSpamming">Start Spamming</button>
+
+  <p id="status" style="margin-top: 20px;"></p>
+
+  <script>
+    document.getElementById("startSpamming").addEventListener("click", async () => {
+      const webhookUrl = document.getElementById("webhookUrl").value;
+      const message = document.getElementById("message").value;
+      const times = parseInt(document.getElementById("times").value);
+      const status = document.getElementById("status");
+
+      if (!webhookUrl || !message || isNaN(times) || times <= 0) {
+        status.textContent = "Please provide valid inputs.";
+        return;
+      }
+
+      status.textContent = "Sending requests...";
+      for (let i = 0; i < times; i++) {
+        try {
+          await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: message }),
+          });
+        } catch (error) {
+          console.error("Error sending request:", error);
+        }
+      }
+      status.textContent = "Finished sending requests.";
+    });
+  </script>
+</body>
+</html>
